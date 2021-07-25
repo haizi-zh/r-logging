@@ -3,10 +3,13 @@
 \name{inbuilt-actions}
 \alias{inbuilt-actions}
 \alias{writeToConsole}
+\alias{buildConsoleHandler}
 \alias{writeToFile}
 \title{Predefined(sample) handler actions}
 \usage{
 writeToConsole(msg, handler, ...)
+
+buildConsoleHandler(console = stdout())
 
 writeToFile(msg, handler, ...)
 }
@@ -41,6 +44,10 @@ A \var{logging.record} is a named list and has following structure:
   \item{logger}{name of the logger that generated it}
   \item{timestamp}{formatted message timestamp}
 }
+
+\code{writeToConsole} detects if crayon package is available and uses it
+to color messages. The coloring can be switched off by means of configuring
+the handler with \var{color_output} option set to FALSE.
 
 \code{writeToConsole} detects if crayon package is available and uses it
 to color messages. The coloring can be switched off by means of configuring

@@ -81,6 +81,37 @@ writeToConsole <- function(msg, handler, ...) {
   cat(paste0(msg, "\n"))
 }
 
+
+#' @rdname inbuilt-actions
+#'
+#' @details
+#' \code{writeToConsole} detects if crayon package is available and uses it
+#' to color messages. The coloring can be switched off by means of configuring
+#' the handler with \var{color_output} option set to FALSE.
+#'
+#' @export
+#'
+buildConsoleHandler <- function(console = stdout()) {
+  writeToConsole <- function(msg, handler, ...) {
+    if (length(list(...)) && "dry" %in% names(list(...))) {
+      if (!is.null(handler$color_output) && handler$color_output == FALSE) {
+        handler$color_msg <- function(msg, level_name) msg
+      } else {
+        handler$color_msg <- .build_msg_coloring()
+      }
+      return(TRUE)
+    }
+    
+    stopifnot(length(list(...)) > 0)
+    
+    level_name <- list(...)[[1]]$levelname
+    msg <- handler$color_msg(msg, level_name)
+    cat(paste0(msg, "\n"), file = console)
+  }
+  
+  return(writeToConsole)
+}
+
 .build_msg_coloring <- function() {
   crayon_env <- tryCatch(asNamespace("crayon"),
                          error = function(e) NULL)
